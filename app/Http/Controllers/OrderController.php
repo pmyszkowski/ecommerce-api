@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    public function __construct(private OrderService $orderService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        return $this->orderService->index();
     }
 
     /**
@@ -25,7 +30,10 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return response( $this->orderService->create(
+            $request->post('email'),
+            $request->post('product_ids')
+        ), 201 );
     }
 
     /**
@@ -36,7 +44,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        return response( $this->orderService->view($order), 200 );
     }
 
     /**
@@ -48,7 +56,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        return response( $this->orderService->update( $request->all(), $order ), 200 );
     }
 
     /**
