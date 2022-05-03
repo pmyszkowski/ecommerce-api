@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\OrderCreated;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 
@@ -27,6 +28,8 @@ class OrderService
         $user = $this->userService->firstOrCreate( $email );
 
         $order = Order::create( ['total_price' => $total_price, 'user_id' => $user->id ] );
+
+        OrderCreated::dispatch($order);
 
         return new OrderResource($order);;
     }

@@ -23,7 +23,7 @@ class OrderProductsTest extends TestCase
         $product_two = Product::factory()->create(['price' => 1250]);
 
         $email = 'test@test.com';
-        $user = User::create(['email' => $email]);
+        $user = User::firstOrCreate(['email' => $email]);
 
         $response = $this->postJson("/public/orders", [
             'email' => $email,
@@ -82,7 +82,7 @@ class OrderProductsTest extends TestCase
         $product_two = Product::factory()->create(['price' => 1250]);
 
         $email = 'test@test.com';
-        $user  = User::create(['email' => $email]);
+        $user  = User::firstOrCreate(['email' => $email]);
 
         $response = $this->postJson("/public/orders", [
             'email' => $email,
@@ -93,6 +93,25 @@ class OrderProductsTest extends TestCase
 
         $response->assertStatus(201);
         $response->assertJsonMissing(['user_id' => $user->id]);
+    }
+
+    /** @test */
+    function orders_number_is_incremented_after_order()
+    {
+        $product = Product::factory()->create();
+
+        $email = 'test@test.com';
+        $user  = User::firstOrCreate(['email' => $email]);
+
+        $response = $this->postJson("/public/orders", [
+            'email' => $email,
+            'product_ids' => [
+                $product->id,
+            ],
+        ]);
+
+        $response->assertStatus(201);
+        $response->assertJsonFragment(['orders_number' => $user->orders_number+1]);
     }
 
 }
