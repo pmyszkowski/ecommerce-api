@@ -3,11 +3,9 @@
 namespace Tests\Feature;
 
 
-use App\Http\Controllers\Controller;
 use App\Models\Product;
 
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
@@ -96,7 +94,7 @@ class OrderProductsTest extends TestCase
     }
 
     /** @test */
-    function orders_number_is_incremented_after_order()
+    function user_orders_number_is_incremented_after_order_is_created()
     {
         $product = Product::factory()->create();
 
@@ -111,7 +109,13 @@ class OrderProductsTest extends TestCase
         ]);
 
         $response->assertStatus(201);
-        $response->assertJsonFragment(['orders_number' => $user->orders_number+1]);
+//        $response->assertJsonFragment(['orders_number' => $user->orders_number+1]);
+
+        $old = $user->orders_number;
+        $user->refresh();
+        $new = $user->orders_number;
+        $this->assertEquals( $old+1, $new );
+
     }
 
 }

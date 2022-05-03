@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Events\OrderCreated;
 use App\Http\Resources\OrderResource;
+use App\Jobs\CloseOldOrders;
 use App\Models\Order;
 
 class OrderService
@@ -31,6 +32,8 @@ class OrderService
 
         OrderCreated::dispatch($order);
 
+        CloseOldOrders::dispatch();
+
         return new OrderResource($order);;
     }
 
@@ -43,6 +46,12 @@ class OrderService
     {
         $order->update( $all );
         return new OrderResource($order);
+    }
+
+    public function closeOldOrders(int $days)
+    {
+        Order::whereDate( 'created_at', '<=', now()->subDays($days) )
+            ->update( ['status'=>Order::STATUS_INACTIVE] );
     }
 
 }
