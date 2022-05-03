@@ -17,7 +17,7 @@ class OrderProductsTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    function user_can_order_products()
+    function public_user_can_order_products()
     {
         $product_one = Product::factory()->create(['price' => 3250]);
         $product_two = Product::factory()->create(['price' => 1250]);
@@ -73,6 +73,26 @@ class OrderProductsTest extends TestCase
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrorFor( 'product_ids' );
+    }
+
+    /** @test */
+    function public_user_cannot_see_user_id_in_response()
+    {
+        $product_one = Product::factory()->create(['price' => 3250]);
+        $product_two = Product::factory()->create(['price' => 1250]);
+
+        $email = 'test@test.com';
+        $user  = User::create(['email' => $email]);
+
+        $response = $this->postJson("/public/orders", [
+            'email' => $email,
+            'product_ids' => [
+                $product_one->id, $product_two->id
+            ],
+        ]);
+
+        $response->assertStatus(201);
+        $response->assertJsonMissing(['user_id' => $user->id]);
     }
 
 }

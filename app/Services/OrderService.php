@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 
 class OrderService
@@ -27,18 +28,18 @@ class OrderService
 
         $order = Order::create( ['total_price' => $total_price, 'user_id' => $user->id ] );
 
-        return $order;
+        return new OrderResource($order);;
     }
 
     public function view(Order $order)
     {
-        return $order;
+        return new OrderResource($order);;
     }
 
     public function update(array $all, Order $order)
     {
         $order->update( $all );
-        return $order;
+        return new OrderResource($order);
     }
 
 }
