@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrderRequest;
 use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class OrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OrderRequest $request)
     {
         return response( $this->orderService->create(
             $request->post('email'),
@@ -54,7 +55,7 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Order $order)
+    public function update(OrderRequest $request, Order $order)
     {
         return response( $this->orderService->update( $request->all(), $order ), 200 );
     }

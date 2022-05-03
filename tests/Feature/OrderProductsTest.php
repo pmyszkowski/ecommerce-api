@@ -44,4 +44,35 @@ class OrderProductsTest extends TestCase
         $this->assertNotNull($user->orders);
     }
 
+    /** @test */
+    function email_is_required_to_order_products()
+    {
+        $product = Product::factory()->create();
+
+        $response = $this->postJson("/public/orders", [
+            'product_ids' => [
+                $product->id,
+            ],
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrorFor( 'email' );
+    }
+
+    /** @test */
+    function product_ids_are_required_to_be_array()
+    {
+        $product_one = Product::factory()->create();
+        $product_two = Product::factory()->create();
+
+        $email = 'test@test.com';
+        $response = $this->postJson("/public/orders", [
+            'email' => $email,
+            'product_ids' => $product_one->id.', '.$product_two->id
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrorFor( 'product_ids' );
+    }
+
 }
