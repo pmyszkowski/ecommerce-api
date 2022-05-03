@@ -12,5 +12,10 @@ class Order extends Model
     const STATUS_ACTIVE  = 'active';
     const STATUS_INACTIVE = 'inactive';
 
+    protected $fillable = [
+        'user_id',
+        'total_price',
+        'payment_status'
+    ];
 
 }
