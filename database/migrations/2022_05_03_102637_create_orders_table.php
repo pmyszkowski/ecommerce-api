@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('user_id')->references('users')->on('id');
             $table->integer('total_price');
             $table->enum('status', [ Order::STATUS_ACTIVE, Order::STATUS_INACTIVE ]);
+            $table->enum('payment_status', [ Order::STATUS_PAID, Order::STATUS_UNPAID ]);
             $table->timestamps();
         });
     }

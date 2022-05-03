@@ -55,7 +55,7 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(OrderRequest $request, Order $order)
+    public function update(Request $request, Order $order)
     {
         return response( $this->orderService->update( $request->all(), $order ), 200 );
     }

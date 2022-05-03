@@ -12,10 +12,15 @@ class Product extends Model
     protected $fillable = [
         'name',
         'price',
+        'active'
     ];
 
     public function getFormattedPriceAttribute() {
         return number_format($this->price / 100, 2 );
+    }
+
+    public function scopeActive($query) {
+        return $query->where('active', 1);
     }
 
 }

@@ -10,7 +10,7 @@ class ProductService
 
     public function index()
     {
-        return Product::all();
+        return Product::active()->get();
     }
 
     public function create( array $attributes )
